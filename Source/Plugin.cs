@@ -13,23 +13,25 @@ namespace com.redcrowbar.buffedpresents
     /// <summary>
     /// BuffedPresents - Makes the GiftBoxItem give either a value increase of the contents, or a random buyable item
     /// </summary>
-    [BepInPlugin("com.redcrowbar.buffedpresents", "Better Presents", "1.0.0")]
+    [BepInPlugin("com.redcrowbar.buffedpresents", "Buffed Presents", "0.0.2")]
     public class BuffedPresents : BaseUnityPlugin
     {
         public static ManualLogSource BPLogger = BepInEx.Logging.Logger.CreateLogSource("BuffedPresents");
         public static BuffedPresents Instance;
-        public static ConfigEntry<bool> Enabled;
-        public static ConfigEntry<float> Chance; //percent chance 0-100
+        public static ConfigEntry<bool> isEnabled;
+        public static ConfigEntry<float> buyableItemChance; //percent chance 0-100 to spawn a buyable item
         public static ConfigEntry<float> minValueMultiply; //min random item value increase multiplier
         public static ConfigEntry<float> maxValueMultiply; //max random item value increase multiplier
-        public const int targetGameVersion = 45; //current build
+        public const string mainConfigDesc = "Settings (only HOST controls these)";
+        public const int targetGameVersion = 45; //current game build late dec 2023
         public static bool versionWarning = true;
         public static bool isDebugBuild = false;
 
         public bool IsDebugBuild()
         {
 #if DEBUG
-            isDebugBuild = true;
+            if (!isDebugBuild)
+                isDebugBuild = true;
 #endif
             return isDebugBuild;
         }
@@ -37,12 +39,12 @@ namespace com.redcrowbar.buffedpresents
         private void Awake()
         {
             Instance = this;
-            Enabled = Config.Bind("Settings (only HOST sets these)", "Enabled", true, "Enable/disable the plugin");
-            Chance = Config.Bind("Settings", "Percent chance present is a random buyable item", 50f, new ConfigDescription("The minimum multiplier to add to a present's value", new AcceptableValueRange<float>(0f, 100f)));
-            minValueMultiply = Config.Bind("Settings", "Min present value multiplier", 1.1f, new ConfigDescription("The min multiplier to add to a present's value, example: orig-value:50 x Multiplier 1.5 = new-value:75", new AcceptableValueRange<float>(1f, 10f)));
-            maxValueMultiply = Config.Bind("Settings", "Max present value multiplier", 2.0f, new ConfigDescription("The max multiplier to add to a present's value, example: orig-value:50 x Multiplier 1.5 = new-value:75", new AcceptableValueRange<float>(1f, 10f)));
+            isEnabled = Config.Bind(mainConfigDesc, "Enabled", true, "Enable/disable the plugin");
+            buyableItemChance = Config.Bind(mainConfigDesc, "Percent chance present is a random buyable item", 50f, new ConfigDescription("The minimum multiplier to add to a present's value", new AcceptableValueRange<float>(0f, 100f)));
+            minValueMultiply = Config.Bind(mainConfigDesc, "Min present value multiplier", 1.1f, new ConfigDescription("The min multiplier to add to a present's value, example: orig-value:50 x Multiplier 1.5 = new-value:75", new AcceptableValueRange<float>(1f, 10f)));
+            maxValueMultiply = Config.Bind(mainConfigDesc, "Max present value multiplier", 2.0f, new ConfigDescription("The max multiplier to add to a present's value, example: orig-value:50 x Multiplier 1.5 = new-value:75", new AcceptableValueRange<float>(1f, 10f)));
 
-            if (Enabled.Value == false)
+            if (isEnabled.Value == false)
                 return;
 
             //enable GiftBoxItem patch
@@ -52,7 +54,8 @@ namespace com.redcrowbar.buffedpresents
 
         private void Update()
         {
-            if (!HUDManager.Instance || !Enabled.Value)
+            //only continue if in-game
+            if (!HUDManager.Instance || !isEnabled.Value)
                 return;
 
             //check game version, warn if different than expected
@@ -90,7 +93,7 @@ namespace com.redcrowbar.buffedpresents
         //Roll based on user chance percentage setting
         public static bool CheckChance()
         {
-            if (Mathf.Clamp(BuffedPresents.Chance.Value, 0f, 100f) / 100f > Random.Range(0f, 0.99f))
+            if (Mathf.Clamp(BuffedPresents.buyableItemChance.Value, 0f, 100f) / 100f > Random.Range(0f, 0.99f))
                 return true;
 
             return false;
@@ -164,11 +167,11 @@ namespace com.redcrowbar.buffedpresents
                     if (previousPlayerHeldBy != null && previousPlayerHeldBy.isInHangarShipRoom)
                         previousPlayerHeldBy.SetItemInElevator(droppedInShipRoom: true, droppedInElevator: true, component);
 
-                    //like the original method, but randomly increase the value (make it better)
+                    //like the original method, but randomly increase the value
                     presentValue = Mathf.RoundToInt(Random.Range(component.itemProperties.minValue + 25, component.itemProperties.maxValue + 35) * RoundManager.Instance.scrapValueMultiplier);
                     float multiplier = Random.Range(BuffedPresents.minValueMultiply.Value, BuffedPresents.maxValueMultiply.Value);
                     presentValue = Mathf.RoundToInt(multiplier * presentValue);
-                    component.SetScrapValue(presentValue); //TODO: debug this, scan shows correct value but when dropped in ship hud shows original value???
+                    component.SetScrapValue(presentValue);
                     component.NetworkObject.Spawn();
                 }
 

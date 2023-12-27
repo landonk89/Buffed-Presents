@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lP2pC4/DW85k4lYkT57BvypTtnAlmiIalQNWeNXBQKQ5XjpkrfSXshcDk63oN2kNzcvApExB5Ww5XW17sfMV4Q==",
+  "dgSpecHash": "tg8F3+AlUW0Bx1uoC3ZFpEYvuhtffS3brDKRt3jkGQF5nc60283jMBsLVNySLMHPvlI+oawcUhrffSJYxYpi7Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\lando\\Desktop\\Buffed Presents\\Source\\BuffedPresents.csproj",
+  "projectFilePath": "C:\\Users\\lando\\Desktop\\Buffed-Presents\\Source\\BuffedPresents.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lando\\.nuget\\packages\\bepinex.analyzers\\1.0.8\\bepinex.analyzers.1.0.8.nupkg.sha512",
     "C:\\Users\\lando\\.nuget\\packages\\bepinex.baselib\\5.4.20\\bepinex.baselib.5.4.20.nupkg.sha512",
