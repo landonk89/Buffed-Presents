@@ -9,3 +9,15 @@ C:\Users\lando\Desktop\Buffed Presents\Source\obj\Debug\netstandard2.1\BuffedPre
 C:\Users\lando\Desktop\Buffed Presents\Source\obj\Debug\netstandard2.1\BuffedPresents.csproj.CoreCompileInputs.cache
 C:\Users\lando\Desktop\Buffed Presents\Source\obj\Debug\netstandard2.1\BuffedPresents.dll
 C:\Users\lando\Desktop\Buffed Presents\Source\obj\Debug\netstandard2.1\BuffedPresents.pdb
+C:\Users\lando\Desktop\Buffed-Presents\Source\bin\Debug\netstandard2.1\BuffedPresents.deps.json
+C:\Users\lando\Desktop\Buffed-Presents\Source\bin\Debug\netstandard2.1\BuffedPresents.dll
+C:\Users\lando\Desktop\Buffed-Presents\Source\bin\Debug\netstandard2.1\BuffedPresents.pdb
+C:\Users\lando\Desktop\Buffed-Presents\Source\obj\Debug\netstandard2.1\BuffedPresents.csproj.AssemblyReference.cache
+C:\Users\lando\Desktop\Buffed-Presents\Source\obj\Debug\netstandard2.1\PluginInfo.cs
+C:\Users\lando\Desktop\Buffed-Presents\Source\obj\Debug\netstandard2.1\BuffedPresents.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lando\Desktop\Buffed-Presents\Source\obj\Debug\netstandard2.1\BuffedPresents.AssemblyInfoInputs.cache
+C:\Users\lando\Desktop\Buffed-Presents\Source\obj\Debug\netstandard2.1\BuffedPresents.AssemblyInfo.cs
+C:\Users\lando\Desktop\Buffed-Presents\Source\obj\Debug\netstandard2.1\BuffedPresents.csproj.CoreCompileInputs.cache
+C:\Users\lando\Desktop\Buffed-Presents\Source\obj\Debug\netstandard2.1\BuffedPresents.sourcelink.json
+C:\Users\lando\Desktop\Buffed-Presents\Source\obj\Debug\netstandard2.1\BuffedPresents.dll
+C:\Users\lando\Desktop\Buffed-Presents\Source\obj\Debug\netstandard2.1\BuffedPresents.pdb

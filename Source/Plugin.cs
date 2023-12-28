@@ -13,7 +13,10 @@ namespace com.redcrowbar.buffedpresents
     /// <summary>
     /// BuffedPresents - Makes the GiftBoxItem give either a value increase of the contents, or a random buyable item
     /// </summary>
-    [BepInPlugin("com.redcrowbar.buffedpresents", "Buffed Presents", "0.0.2")]
+    [BepInPlugin("com.redcrowbar.buffedpresents", "Buffed Presents", "0.0.3")]
+    [BepInIncompatibility("GiftBoxRevert")]
+    [BepInIncompatibility("LethalPresents")]
+    [BepInIncompatibility("ExplodingPresents")]
     public class BuffedPresents : BaseUnityPlugin
     {
         public static ManualLogSource BPLogger = BepInEx.Logging.Logger.CreateLogSource("BuffedPresents");
@@ -66,7 +69,7 @@ namespace com.redcrowbar.buffedpresents
             }
 
             //just for testing, press F8 to copy a giftbox from the level and spawn it at the player
-            if (IsDebugBuild() && Keyboard.current.f8Key.wasPressedThisFrame)
+            if (IsDebugBuild() && !StartOfRound.Instance.inShipPhase && Keyboard.current.f8Key.wasPressedThisFrame)
             {
                 foreach (var scrapItem in RoundManager.Instance.currentLevel.spawnableScrap)
                 {
@@ -88,7 +91,7 @@ namespace com.redcrowbar.buffedpresents
 
     public class GiftBoxPatch
     {
-        public static ManualLogSource PatchLogger = BepInEx.Logging.Logger.CreateLogSource("BuffedPresentsPatch");
+        public static ManualLogSource PatchLogger = BepInEx.Logging.Logger.CreateLogSource("BuffedPresentsPatches");
 
         //Roll based on user chance percentage setting
         public static bool CheckChance()
