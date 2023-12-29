@@ -13,7 +13,7 @@ namespace com.redcrowbar.buffedpresents
     /// <summary>
     /// BuffedPresents - Makes the GiftBoxItem give either a value increase of the contents, or a random buyable item
     /// </summary>
-    [BepInPlugin("com.redcrowbar.buffedpresents", "Buffed Presents", "0.0.3")]
+    [BepInPlugin("com.redcrowbar.buffedpresents", "Buffed Presents", "0.0.4")]
     [BepInIncompatibility("GiftBoxRevert")]
     [BepInIncompatibility("LethalPresents")]
     [BepInIncompatibility("ExplodingPresents")]
