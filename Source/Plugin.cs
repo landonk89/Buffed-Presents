@@ -13,7 +13,7 @@ namespace com.redcrowbar.buffedpresents
     /// <summary>
     /// BuffedPresents - Makes the GiftBoxItem give either a value increase of the contents, or a random buyable item
     /// </summary>
-    [BepInPlugin("com.redcrowbar.buffedpresents", "Buffed Presents", "0.0.3")]
+    [BepInPlugin("com.redcrowbar.buffedpresents", "Buffed Presents", "0.0.5")]
     [BepInIncompatibility("GiftBoxRevert")]
     [BepInIncompatibility("LethalPresents")]
     [BepInIncompatibility("ExplodingPresents")]
@@ -26,7 +26,7 @@ namespace com.redcrowbar.buffedpresents
         public static ConfigEntry<float> minValueMultiply; //min random item value increase multiplier
         public static ConfigEntry<float> maxValueMultiply; //max random item value increase multiplier
         public const string mainConfigDesc = "Settings (only HOST controls these)";
-        public const int targetGameVersion = 45; //current game build late dec 2023
+        public const ushort targetGameVersion = 49; //current game build early january 2024
         public static bool versionWarning = true;
         public static bool isDebugBuild = false;
 
@@ -44,8 +44,8 @@ namespace com.redcrowbar.buffedpresents
             Instance = this;
             isEnabled = Config.Bind(mainConfigDesc, "Enabled", true, "Enable/disable the plugin");
             buyableItemChance = Config.Bind(mainConfigDesc, "Percent chance present is a random buyable item", 50f, new ConfigDescription("The minimum multiplier to add to a present's value", new AcceptableValueRange<float>(0f, 100f)));
-            minValueMultiply = Config.Bind(mainConfigDesc, "Min present value multiplier", 1.1f, new ConfigDescription("The min multiplier to add to a present's value, example: orig-value:50 x Multiplier 1.5 = new-value:75", new AcceptableValueRange<float>(1f, 10f)));
-            maxValueMultiply = Config.Bind(mainConfigDesc, "Max present value multiplier", 2.0f, new ConfigDescription("The max multiplier to add to a present's value, example: orig-value:50 x Multiplier 1.5 = new-value:75", new AcceptableValueRange<float>(1f, 10f)));
+            minValueMultiply = Config.Bind(mainConfigDesc, "Min present value multiplier", 3.0f, new ConfigDescription("The min multiplier to add to a present's value, example: orig-value:50 x Multiplier 1.5 = new-value:75", new AcceptableValueRange<float>(1f, 10f)));
+            maxValueMultiply = Config.Bind(mainConfigDesc, "Max present value multiplier", 6.0f, new ConfigDescription("The max multiplier to add to a present's value, example: orig-value:50 x Multiplier 1.5 = new-value:75", new AcceptableValueRange<float>(1f, 10f)));
 
             if (isEnabled.Value == false)
                 return;
@@ -62,9 +62,10 @@ namespace com.redcrowbar.buffedpresents
                 return;
 
             //check game version, warn if different than expected
-            if (versionWarning && GameNetworkManager.Instance.gameVersionNum != targetGameVersion)
+            //if (versionWarning && GameNetworkManager.Instance.gameVersionNum != targetGameVersion)
+            if (versionWarning && GameNetworkManager.Instance.GetComponent<NetworkManager>().NetworkConfig.ProtocolVersion != targetGameVersion)
             {
-                BPLogger.LogWarning($"WARNING: Game version is {GameNetworkManager.Instance.gameVersionNum}, expected {targetGameVersion}. You may encounter issues!");
+                BPLogger.LogWarning($"WARNING: Game version is {GameNetworkManager.Instance.GetComponent<NetworkManager>().NetworkConfig.ProtocolVersion}, expected {targetGameVersion}. You may encounter issues!");
                 versionWarning = false;
             }
 
@@ -171,7 +172,9 @@ namespace com.redcrowbar.buffedpresents
                         previousPlayerHeldBy.SetItemInElevator(droppedInShipRoom: true, droppedInElevator: true, component);
 
                     //like the original method, but randomly increase the value
-                    presentValue = Mathf.RoundToInt(Random.Range(component.itemProperties.minValue + 25, component.itemProperties.maxValue + 35) * RoundManager.Instance.scrapValueMultiplier);
+                    //v47 added objectInPresentValue to GiftBoxItem so value isn't calculated the same way anymore
+                    //presentValue = Mathf.RoundToInt(Random.Range(component.itemProperties.minValue + 25, component.itemProperties.maxValue + 35) * RoundManager.Instance.scrapValueMultiplier);
+                    presentValue = AccessExtensions.GetFieldValue<int>(__instance, "objectInPresentValue");
                     float multiplier = Random.Range(BuffedPresents.minValueMultiply.Value, BuffedPresents.maxValueMultiply.Value);
                     presentValue = Mathf.RoundToInt(multiplier * presentValue);
                     component.SetScrapValue(presentValue);
