@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BuffedPresents")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3f612899ce1a1253c2cf456f7ddcf6f6cf0f9cf3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("BuffedPresents")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BuffedPresents")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
