@@ -4,6 +4,7 @@ using BepInEx.Logging;
 using GameNetcodeStuff;
 using HarmonyLib;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,9 +14,9 @@ namespace com.redcrowbar.buffedpresents
     /// <summary>
     /// BuffedPresents - Makes the GiftBoxItem give either a value increase of the contents, or a random buyable item
     /// </summary>
-    [BepInPlugin("com.redcrowbar.buffedpresents", "Buffed Presents", "0.0.5")]
+    [BepInPlugin("com.redcrowbar.buffedpresents", "Buffed Presents", "0.0.6")] // bumped for v50 update
     [BepInIncompatibility("GiftBoxRevert")]
-    [BepInIncompatibility("LethalPresents")]
+    //[BepInIncompatibility("LethalPresents")]
     [BepInIncompatibility("ExplodingPresents")]
     public class BuffedPresents : BaseUnityPlugin
     {
@@ -26,7 +27,7 @@ namespace com.redcrowbar.buffedpresents
         public static ConfigEntry<float> minValueMultiply; //min random item value increase multiplier
         public static ConfigEntry<float> maxValueMultiply; //max random item value increase multiplier
         public const string mainConfigDesc = "Settings (only HOST controls these)";
-        public const ushort targetGameVersion = 49; //current game build early january 2024
+        public const ushort targetGameVersion = 50; //current game build June 2024
         public static bool versionWarning = true;
         public static bool isDebugBuild = false;
 
@@ -72,20 +73,23 @@ namespace com.redcrowbar.buffedpresents
             //just for testing, press F8 to copy a giftbox from the level and spawn it at the player
             if (IsDebugBuild() && !StartOfRound.Instance.inShipPhase && Keyboard.current.f8Key.wasPressedThisFrame)
             {
+                List<SpawnableItemWithRarity> boxes = new();
                 foreach (var scrapItem in RoundManager.Instance.currentLevel.spawnableScrap)
                 {
                     if (scrapItem.spawnableItem.itemName.Contains("Gift"))
                     {
                         BPLogger.LogDebug("Found GiftBox");
-                        var parent = RoundManager.Instance.spawnedScrapContainer;
-                        var localPlayer = StartOfRound.Instance.localPlayerController;
-                        Vector3 vector = localPlayer.transform.position + localPlayer.transform.forward * 0.5f + Vector3.up * 0.5f;
-                        GameObject newBox = Instantiate(scrapItem.spawnableItem.spawnPrefab, vector, Quaternion.identity, parent);
-                        GiftBoxItem component = newBox.GetComponent<GiftBoxItem>();
-                        component.NetworkObject.Spawn();
-                        break;
+                        boxes.Add(scrapItem);
                     }
                 }
+                // pick a random one to copy
+                int rand = Random.Range(0, boxes.Count);
+                var parent = RoundManager.Instance.spawnedScrapContainer;
+                var localPlayer = StartOfRound.Instance.localPlayerController;
+                Vector3 vector = localPlayer.transform.position + localPlayer.transform.forward * 0.5f + Vector3.up * 0.5f;
+                GameObject newBox = Instantiate(boxes[rand].spawnableItem.spawnPrefab, vector, Quaternion.identity, parent);
+                GiftBoxItem component = newBox.GetComponent<GiftBoxItem>();
+                component.NetworkObject.Spawn();
             }
         }
     }
